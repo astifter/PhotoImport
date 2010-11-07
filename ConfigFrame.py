@@ -90,7 +90,7 @@ class ConfigFrame(wx.Frame):
         import FileList
         self.filelist = FileList.FileList(self)
         self.filelist.Filter()
-        self.filelist.Copy()
+        self.filelist.ShowDialog()
 
     def GetSource(self):
         return self.srcvalue.GetValue()

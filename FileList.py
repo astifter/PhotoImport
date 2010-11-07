@@ -1,6 +1,7 @@
 import glob
 import os
 import datetime
+import shutil
 
 class FileList:
 
@@ -11,7 +12,7 @@ class FileList:
         self._dest = parent.GetDest()
         self._pattern = parent.GetName()
         self._files = {}
-        
+
         filelist = glob.glob(self._source + "/*")
 
         for f in filelist:
@@ -35,7 +36,7 @@ class FileList:
     def Filter(self):
 
         for date in sorted(self._files.keys()):
-            
+
             destpath = self._pattern.replace("<date>", date);
             destpath = destpath.replace("<name>", "*");
 
@@ -43,7 +44,7 @@ class FileList:
                 del self._files[date]
 
 
-    def Copy(self):
+    def ShowDialog(self):
 
         for date in sorted(self._files.keys()):
             import CopyDialog
@@ -52,7 +53,17 @@ class FileList:
             cf.SetDestination(self._dest)
             cf.SetPattern(self._pattern.replace("<date>", date))
             cf.SetFiles(self._files[date])
+            cf.SetCopyHandler(self.Copy)
             cf.ShowModal()
+
+
+    def Copy(self,date,folder):
+        dest = self._dest + "/" + folder
+
+        os.mkdir(dest)
+
+        for f in self._files[date]:
+            shutil.copy2(f,dest)
 
 
     def __str__(self):
@@ -75,4 +86,4 @@ if __name__ == "__main__":
     fl.Filter()
     print fl
 
-    fl.Copy(None)
+    fl.ShowDialog()
