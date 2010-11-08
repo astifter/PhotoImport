@@ -1,6 +1,41 @@
 ################################################################################
 PhotoImport
+
 ################################################################################
-A picture importing application that copies the photos of each separate day to
-a single folder.
+A simple picture importing application that copies the photos of each separate 
+day to a single folder.
+
 ################################################################################
+Runtime-Requirements
+*) pyexiv2 from (https://launchpad.net/~pyexiv2-developers/+archive/ppa)
+*) wxPython (http://www.wxpython.org/)
+
+Development-Requirements
+*) wxGlade (http://wxglade.sourceforge.net/)
+
+################################################################################
+The source folder is scanned for pictures, those are sorted according to 
+modification date and filed into separate days. (A day starts at 6:00 AM and
+lasts for 24 hours.)
+If there is a folder created for this day in the destination the pictures are
+not imported.
+For each unimported day an import dialog is shown where the destination folder
+name can be configured and previews of the pictures can be reviewed. After 
+closing the dialog the folder is created and the pictures are copied. 
+
+################################################################################
+Copyright 2010 Andreas Neustifter (andreas.neustifter@gmail.com)
+
+This file is part of PhotoImport.
+
+PhotoImport is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+PhotoImport is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+PhotoImport. If not, see <http://www.gnu.org/licenses/>.
