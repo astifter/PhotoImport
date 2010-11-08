@@ -1,0 +1,6 @@
+# python compiled 
+*.pyc
+
+# editor backups
+*~
+*.orig
