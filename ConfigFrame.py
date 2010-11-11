@@ -58,6 +58,9 @@ class ConfigFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.evt_cancelbtn, self.cancelbtn)
         self.Bind(wx.EVT_BUTTON, self.evt_okbtn, self.okbtn)
         # end wxGlade
+        self.Bind(wx.EVT_CLOSE, self.evt_close, self)
+
+        self.__get_config()
 
     def __set_properties(self):
         # begin wxGlade: ConfigFrame.__set_properties
@@ -109,6 +112,16 @@ class ConfigFrame(wx.Frame):
         self.Layout()
         # end wxGlade
 
+    def __get_config(self):
+        config = wx.Config("PhotoImport")
+        if not config.HasGroup("ConfigFrame"):
+            return
+        config.SetPath("ConfigFrame")
+        self.srcrecursive.SetValue(config.ReadBool("Recursive", False))
+        self.srcvalue.SetValue(config.Read("Source", ""))
+        self.destvalue.SetValue(config.Read("Destination", ""))
+        self.namevalue.SetValue(config.Read("FolderPattern", ""))
+
     def evt_cancelbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         self.Close()
 
@@ -135,13 +148,20 @@ class ConfigFrame(wx.Frame):
         dlg.SetPath(self.srcvalue.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
             self.srcvalue.SetValue(dlg.GetPath())
-        event.Skip()
 
     def evt_BrowseDest(self, event): # wxGlade: ConfigFrame.<event_handler>
         dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         dlg.SetPath(self.srcvalue.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
             self.destvalue.SetValue(dlg.GetPath())
+
+    def evt_close(self, event):
+        config = wx.Config("PhotoImport")
+        config.SetPath("ConfigFrame")
+        config.WriteBool("Recursive", self.srcrecursive.GetValue())
+        config.Write("Source", self.srcvalue.GetValue())
+        config.Write("Destination", self.destvalue.GetValue())
+        config.Write("FolderPattern", self.namevalue.GetValue())
         event.Skip()
 
 # end of class ConfigFrame
