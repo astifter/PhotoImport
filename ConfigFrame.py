@@ -36,7 +36,7 @@ class ConfigFrame(wx.Frame):
         self.mainpanel = wx.Panel(self, -1, style=wx.NO_BORDER)
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Destination Folder")
         self.sizer_2_staticbox = wx.StaticBox(self.mainpanel, -1, "Source Folder")
-        self.checkbox_1 = wx.CheckBox(self.mainpanel, -1, "Recursive")
+        self.srcrecursive = wx.CheckBox(self.mainpanel, -1, "Recursive")
         self.srcvalue = wx.TextCtrl(self.mainpanel, -1, "/media/EOS_DIGITAL/DCIM/100CANON/")
         self.srcselect = wx.Button(self.mainpanel, -1, ". . .")
         self.panel_2 = wx.Panel(self.mainpanel, -1)
@@ -62,7 +62,7 @@ class ConfigFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: ConfigFrame.__set_properties
         self.SetTitle("Configuration")
-        self.checkbox_1.SetMinSize((100,37))
+        self.srcrecursive.SetMinSize((100,37))
         self.srcvalue.SetMinSize((300, 27))
         self.srcselect.SetMinSize((60, 29))
         self.panel_2.SetMinSize((100,37))
@@ -84,7 +84,7 @@ class ConfigFrame(wx.Frame):
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_4 = wx.StaticBoxSizer(self.sizer_4_staticbox, wx.HORIZONTAL)
         sizer_2 = wx.StaticBoxSizer(self.sizer_2_staticbox, wx.HORIZONTAL)
-        sizer_2.Add(self.checkbox_1, 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 6)
+        sizer_2.Add(self.srcrecursive, 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 6)
         sizer_2.Add(self.srcvalue, 1, wx.ALL, 4)
         sizer_2.Add(self.srcselect, 0, wx.ALL, 4)
         sizer_1.Add(sizer_2, 0, wx.ALL|wx.EXPAND, 4)
@@ -126,6 +126,9 @@ class ConfigFrame(wx.Frame):
 
     def GetName(self):
         return self.namevalue.GetValue()
+
+    def GetRecursive(self):
+        return self.srcrecursive.GetValue()
 
     def evt_BrowseSource(self, event): # wxGlade: ConfigFrame.<event_handler>
         dlg = wx.DirDialog(self, "Choose a Source Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)

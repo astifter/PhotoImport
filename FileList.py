@@ -29,9 +29,16 @@ class FileList:
         self._source = parent.GetSource()
         self._dest = parent.GetDest()
         self._pattern = parent.GetName()
+        self._recursive = parent.GetRecursive()
         self._files = {}
 
-        filelist = glob.glob(self._source + "/*")
+        if self._recursive:
+            filelist = []
+            for (dirp,dirs,files) in os.walk(self._source + "/"):
+                for f in files:
+                    filelist.append(os.path.join(dirp,f));
+        else:
+            filelist = glob.glob(self._source + "/*")
 
         for f in filelist:
 
