@@ -126,14 +126,17 @@ class ConfigFrame(wx.Frame):
         return self.namevalue.GetValue()
 
     def evt_BrowseSource(self, event): # wxGlade: ConfigFrame.<event_handler>
-        dlg = wx.DirDialog(self, "Choose a Source directory:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+        dlg = wx.DirDialog(self, "Choose a Source Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         dlg.SetPath(self.srcvalue.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
             self.srcvalue.SetValue(dlg.GetPath())
         event.Skip()
 
     def evt_BrowseDest(self, event): # wxGlade: ConfigFrame.<event_handler>
-        print "Event handler `evt_BrowseDest' not implemented"
+        dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+        dlg.SetPath(self.srcvalue.GetValue())
+        if dlg.ShowModal() == wx.ID_OK:
+            self.destvalue.SetValue(dlg.GetPath())
         event.Skip()
 
 # end of class ConfigFrame
