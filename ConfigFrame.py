@@ -35,6 +35,7 @@ class ConfigFrame(wx.Frame):
         wx.Frame.__init__(self, *args, **kwds)
         self.mainpanel = wx.Panel(self, -1, style=wx.NO_BORDER)
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Destination Folder")
+        self.sizer_6_staticbox = wx.StaticBox(self.mainpanel, -1, "File Renaming")
         self.sizer_2_staticbox = wx.StaticBox(self.mainpanel, -1, "Source Folder")
         self.srcrecursive = wx.CheckBox(self.mainpanel, -1, "Recursive")
         self.srcvalue = wx.TextCtrl(self.mainpanel, -1, "/media/EOS_DIGITAL/DCIM/100CANON/")
@@ -42,9 +43,12 @@ class ConfigFrame(wx.Frame):
         self.panel_2 = wx.Panel(self.mainpanel, -1)
         self.destvalue = wx.TextCtrl(self.mainpanel, -1, "/mnt/data/andi/fotos/sessions")
         self.destselect = wx.Button(self.mainpanel, -1, ". . .")
-        self.namelbl = wx.StaticText(self.mainpanel, -1, "Name Pattern")
-        self.namevalue = wx.TextCtrl(self.mainpanel, -1, "<date>_<name>")
+        self.foldernamelbl = wx.StaticText(self.mainpanel, -1, "Folder Naming")
+        self.foldernamevalue = wx.TextCtrl(self.mainpanel, -1, "<date>_<name>")
         self.spacepanel1 = wx.Panel(self.mainpanel, -1)
+        self.renamefiles = wx.CheckBox(self.mainpanel, -1, "Rename")
+        self.filenamevalue = wx.TextCtrl(self.mainpanel, -1, "<date>-<time>.<ext>")
+        self.spacepanel4 = wx.Panel(self.mainpanel, -1)
         self.spacepanel3 = wx.Panel(self.mainpanel, -1)
         self.cancelbtn = wx.Button(self.mainpanel, wx.ID_CANCEL, "")
         self.okbtn = wx.Button(self.mainpanel, wx.ID_OK, "")
@@ -55,6 +59,7 @@ class ConfigFrame(wx.Frame):
 
         self.Bind(wx.EVT_BUTTON, self.evt_BrowseSource, self.srcselect)
         self.Bind(wx.EVT_BUTTON, self.evt_BrowseDest, self.destselect)
+        self.Bind(wx.EVT_CHECKBOX, self.evt_renamefiles, self.renamefiles)
         self.Bind(wx.EVT_BUTTON, self.evt_cancelbtn, self.cancelbtn)
         self.Bind(wx.EVT_BUTTON, self.evt_okbtn, self.okbtn)
         # end wxGlade
@@ -71,9 +76,12 @@ class ConfigFrame(wx.Frame):
         self.panel_2.SetMinSize((100,37))
         self.destvalue.SetMinSize((300, 27))
         self.destselect.SetMinSize((60, 29))
-        self.namelbl.SetMinSize((100, 17))
-        self.namevalue.SetMinSize((300, 27))
+        self.foldernamelbl.SetMinSize((100, 17))
+        self.foldernamevalue.SetMinSize((300, 27))
         self.spacepanel1.SetMinSize((65,29))
+        self.renamefiles.SetMinSize((100, 37))
+        self.filenamevalue.SetMinSize((300, 27))
+        self.spacepanel4.SetMinSize((65,29))
         self.cancelbtn.SetMinSize((70, 29))
         self.okbtn.SetMinSize((100, 29))
         self.spacepanel2.SetMinSize((60, 29))
@@ -84,6 +92,7 @@ class ConfigFrame(wx.Frame):
         mainsizer = wx.BoxSizer(wx.HORIZONTAL)
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_6 = wx.StaticBoxSizer(self.sizer_6_staticbox, wx.HORIZONTAL)
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_4 = wx.StaticBoxSizer(self.sizer_4_staticbox, wx.HORIZONTAL)
         sizer_2 = wx.StaticBoxSizer(self.sizer_2_staticbox, wx.HORIZONTAL)
@@ -95,10 +104,14 @@ class ConfigFrame(wx.Frame):
         sizer_4.Add(self.destvalue, 1, wx.ALL, 4)
         sizer_4.Add(self.destselect, 0, wx.ALL, 4)
         sizer_1.Add(sizer_4, 0, wx.ALL|wx.EXPAND, 4)
-        sizer_5.Add(self.namelbl, 0, wx.ALL|wx.ALIGN_RIGHT, 8)
-        sizer_5.Add(self.namevalue, 1, wx.ALL, 4)
+        sizer_5.Add(self.foldernamelbl, 0, wx.ALL|wx.ALIGN_RIGHT, 8)
+        sizer_5.Add(self.foldernamevalue, 1, wx.ALL, 4)
         sizer_5.Add(self.spacepanel1, 0, wx.ALL|wx.EXPAND, 4)
         sizer_1.Add(sizer_5, 0, wx.ALL|wx.EXPAND, 4)
+        sizer_6.Add(self.renamefiles, 0, wx.LEFT|wx.RIGHT|wx.EXPAND, 6)
+        sizer_6.Add(self.filenamevalue, 1, wx.ALL, 4)
+        sizer_6.Add(self.spacepanel4, 0, wx.ALL|wx.EXPAND, 4)
+        sizer_1.Add(sizer_6, 0, wx.ALL|wx.EXPAND, 4)
         sizer_3.Add(self.spacepanel3, 1, wx.EXPAND, 0)
         sizer_3.Add(self.cancelbtn, 0, wx.ALL, 4)
         sizer_3.Add(self.okbtn, 0, wx.ALL, 4)
@@ -120,7 +133,10 @@ class ConfigFrame(wx.Frame):
         self.srcrecursive.SetValue(config.ReadBool("Recursive", False))
         self.srcvalue.SetValue(config.Read("Source", ""))
         self.destvalue.SetValue(config.Read("Destination", ""))
-        self.namevalue.SetValue(config.Read("FolderPattern", ""))
+        self.foldernamevalue.SetValue(config.Read("FolderPattern", ""))
+        self.renamefiles.SetValue(config.ReadBool("RenameFiles", False))
+        self.filenamevalue.SetValue(config.Read("FilePattern", ""))
+        self.evt_renamefiles(None)
 
     def evt_cancelbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         self.Close()
@@ -138,7 +154,7 @@ class ConfigFrame(wx.Frame):
         return self.destvalue.GetValue()
 
     def GetName(self):
-        return self.namevalue.GetValue()
+        return self.foldernamevalue.GetValue()
 
     def GetRecursive(self):
         return self.srcrecursive.GetValue()
@@ -161,8 +177,13 @@ class ConfigFrame(wx.Frame):
         config.WriteBool("Recursive", self.srcrecursive.GetValue())
         config.Write("Source", self.srcvalue.GetValue())
         config.Write("Destination", self.destvalue.GetValue())
-        config.Write("FolderPattern", self.namevalue.GetValue())
+        config.Write("FolderPattern", self.foldernamevalue.GetValue())
+        config.WriteBool("RenameFiles", self.renamefiles.GetValue())
+        config.Write("FilePattern", self.filenamevalue.GetValue())
         event.Skip()
+
+    def evt_renamefiles(self, event): # wxGlade: ConfigFrame.<event_handler>
+        self.filenamevalue.Enable(self.renamefiles.GetValue())
 
 # end of class ConfigFrame
 
