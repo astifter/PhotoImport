@@ -20,6 +20,7 @@ import glob
 import os
 import datetime
 import shutil
+import pyexiv2
 
 class FileList:
 
@@ -41,9 +42,10 @@ class FileList:
             filelist = glob.glob(self._source + "/*")
 
         for f in filelist:
+            exif = pyexiv2.ImageMetadata(f)
+            exif.read()
 
-            fs = os.stat(f)
-            fm = datetime.datetime.fromtimestamp(fs.st_mtime)
+            fm = exif['Exif.Photo.DateTimeOriginal'].value
 
             if fm.hour < 6:
                 date = fm - datetime.timedelta(days=1)
@@ -53,9 +55,9 @@ class FileList:
             datestr = date.strftime("%Y%m%d")
 
             if not self._files.has_key(datestr):
-                self._files[datestr] = []
+                self._files[datestr] = {}
 
-            self._files[datestr].append(f)
+            self._files[datestr][f] = date
 
 
     def Filter(self):

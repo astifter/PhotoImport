@@ -116,7 +116,7 @@ class CopyDialog(wx.Dialog):
     def SetFiles(self, files):
         self.filelst.InsertColumn(0,"Name",width=self.filelst.GetSize().width)
 
-        for i in files:
+        for i in files.keys():
             self.filelst.InsertStringItem(100,i)
 
     def SetCopyHandler(self, handler):
