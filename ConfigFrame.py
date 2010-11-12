@@ -32,7 +32,7 @@ import ConfigData
 class ConfigFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         # begin wxGlade: ConfigFrame.__init__
-        kwds["style"] = wx.DEFAULT_FRAME_STYLE
+        kwds["style"] = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.SYSTEM_MENU|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL|wx.CLIP_CHILDREN
         wx.Frame.__init__(self, *args, **kwds)
         self.mainpanel = wx.Panel(self, -1, style=wx.NO_BORDER)
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Destination Folder")
@@ -71,6 +71,7 @@ class ConfigFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: ConfigFrame.__set_properties
         self.SetTitle("Configuration")
+        self.SetSize((702, 300))
         self.srcrecursive.SetMinSize((100,37))
         self.srcvalue.SetMinSize((300, 27))
         self.srcselect.SetMinSize((60, 29))
@@ -121,9 +122,9 @@ class ConfigFrame(wx.Frame):
         self.mainpanel.SetSizer(sizer_1)
         mainsizer.Add(self.mainpanel, 1, wx.EXPAND, 0)
         self.SetSizer(mainsizer)
-        mainsizer.Fit(self)
         mainsizer.SetSizeHints(self)
         self.Layout()
+        self.Centre()
         # end wxGlade
 
     def __get_config(self):
@@ -146,6 +147,7 @@ class ConfigFrame(wx.Frame):
 
     def evt_cancelbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         self.Close()
+        event.Skip()
 
     def evt_okbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         import FileList
@@ -153,18 +155,21 @@ class ConfigFrame(wx.Frame):
         self.filelist = FileList.FileList(self.config, self)
         self.filelist.Filter()
         self.filelist.ShowDialog()
+        event.Skip()
 
     def evt_BrowseSource(self, event): # wxGlade: ConfigFrame.<event_handler>
         dlg = wx.DirDialog(self, "Choose a Source Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         dlg.SetPath(self.srcvalue.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
             self.srcvalue.SetValue(dlg.GetPath())
+        event.Skip()
 
     def evt_BrowseDest(self, event): # wxGlade: ConfigFrame.<event_handler>
         dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         dlg.SetPath(self.srcvalue.GetValue())
         if dlg.ShowModal() == wx.ID_OK:
             self.destvalue.SetValue(dlg.GetPath())
+        event.Skip()
 
     def evt_close(self, event):
         self.__set_config()
@@ -173,7 +178,7 @@ class ConfigFrame(wx.Frame):
 
     def evt_renamefiles(self, event): # wxGlade: ConfigFrame.<event_handler>
         self.filenamevalue.Enable(self.renamefiles.GetValue())
+        if event is not None:
+            event.Skip()
 
 # end of class ConfigFrame
-
-
