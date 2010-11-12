@@ -89,11 +89,21 @@ class FileList:
     def Copy(self,date,folder):
         dest = self.config.destvalue + "/" + folder
 
+        print dest + "\n"
         os.mkdir(dest)
 
-        for f in self.files[date]:
-            shutil.copy2(f,dest)
+        for (f, d) in self.files[date].items():
+            path = dest
+            if self.config.renamefiles:
+                (root, ext) = os.path.splitext(f)
+                ext = ext[1:]
+                filename = self.config.filenamevalue.replace("<date>",date)
+                filename = filename.replace("<time>",d.strftime("%H%M%S"))
+                filename = filename.replace("<ext>",ext)
+                path = os.path.join(path, filename)
 
+            print f + " " + path + "\n"
+            shutil.copy2(f,path)
 
     def __str__(self):
 
