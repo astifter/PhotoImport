@@ -101,19 +101,15 @@ class CopyDialog(wx.Dialog):
         self.Layout()
         # end wxGlade
 
-    def SetDate(self, date):
+    def SetConfig(self, config, date, files, handler):
+        self.config = config
         self.date = date
         text = self.headerlbl.GetValue()
         text = text.replace("<date>" ,date)
         self.headerlbl.SetValue(text)
+        self.destvalue.SetValue(self.config.destvalue)
+        self.namevalue.SetValue(self.config.foldernamevalue.replace("<date>",date))
 
-    def SetDestination(self, dest):
-        self.destvalue.SetValue(dest)
-
-    def SetPattern(self, pattern):
-        self.namevalue.SetValue(pattern)
-
-    def SetFiles(self, files):
         self.filelst.InsertColumn(0,"Name",width=wx.LIST_AUTOSIZE)
 
         for i in files.keys():
@@ -121,7 +117,6 @@ class CopyDialog(wx.Dialog):
 
         self.filelst.SetColumnWidth(0,width=wx.LIST_AUTOSIZE)
 
-    def SetCopyHandler(self, handler):
         self.handler = handler
 
     def evt_splitter1_resize(self, event): # wxGlade: CopyDialog.<event_handler>
@@ -137,11 +132,13 @@ class CopyDialog(wx.Dialog):
         event.Skip()
 
     def evt_cancelbtn(self, event): # wxGlade: CopyDialog.<event_handler>
-        self.Destroy()
+        self.Close()
+        event.Skip()
 
     def evt_okbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         self.handler(self.date, self.namevalue.GetValue())
-        self.Destroy()
+        self.Close()
+        event.Skip()
 
     def evt_neverbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         import os

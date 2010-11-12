@@ -24,22 +24,19 @@ import pyexiv2
 
 class FileList:
 
-    def __init__ (self, parent):
+    def __init__ (self, config, parent):
 
-        self._parent = parent
-        self._source = parent.GetSource()
-        self._dest = parent.GetDest()
-        self._pattern = parent.GetName()
-        self._recursive = parent.GetRecursive()
-        self._files = {}
+        self.parent = parent
+        self.config = config;
+        self.files = {}
 
-        if self._recursive:
+        if self.config.srcrecursive:
             filelist = []
-            for (dirp,dirs,files) in os.walk(self._source + "/"):
+            for (dirp,dirs,files) in os.walk(self.config.srcvalue + "/"):
                 for f in files:
                     filelist.append(os.path.join(dirp,f));
         else:
-            filelist = glob.glob(self._source + "/*")
+            filelist = glob.glob(self.config.srcvalue + "/*")
 
         for f in filelist:
             exif = pyexiv2.ImageMetadata(f)
@@ -64,42 +61,37 @@ class FileList:
 
             datestr = date.strftime("%Y%m%d")
 
-            if not self._files.has_key(datestr):
-                self._files[datestr] = {}
+            if not self.files.has_key(datestr):
+                self.files[datestr] = {}
 
-            self._files[datestr][f] = date
+            self.files[datestr][f] = date
 
 
     def Filter(self):
 
-        for date in sorted(self._files.keys()):
+        for date in sorted(self.files.keys()):
 
-            destpath = self._pattern.replace("<date>", date);
+            destpath = self.config.foldernamevalue.replace("<date>", date);
             destpath = destpath.replace("<name>", "*");
 
-            if len(glob.glob(self._dest + "/" + destpath)) > 0:
-                del self._files[date]
+            if len(glob.glob(self.config.destvalue + "/" + destpath)) > 0:
+                del self.files[date]
 
 
     def ShowDialog(self):
 
-        for date in sorted(self._files.keys()):
+        for date in sorted(self.files.keys()):
             import CopyDialog
-            cf = CopyDialog.CopyDialog(self._parent, -1, "")
-            cf.SetDate(date)
-            cf.SetDestination(self._dest)
-            cf.SetPattern(self._pattern.replace("<date>", date))
-            cf.SetFiles(self._files[date])
-            cf.SetCopyHandler(self.Copy)
+            cf = CopyDialog.CopyDialog(self.parent, -1, "")
+            cf.SetConfig(self.config, date, self.files[date], self.Copy)
             cf.ShowModal()
 
-
     def Copy(self,date,folder):
-        dest = self._dest + "/" + folder
+        dest = self.config.destvalue + "/" + folder
 
         os.mkdir(dest)
 
-        for f in self._files[date]:
+        for f in self.files[date]:
             shutil.copy2(f,dest)
 
 
@@ -107,9 +99,9 @@ class FileList:
 
         retval = []
 
-        for date in sorted(self._files.keys()):
+        for date in sorted(self.files.keys()):
             retval.append("date: " + date)
-            for f in self._files[date]:
+            for f in self.files[date]:
                 retval.append(f)
 
         return "\n".join(retval)
