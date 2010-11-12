@@ -96,3 +96,5 @@ class ImagePanel(wx.Panel):
             dc.DrawBitmap(self._drawdata.ConvertToBitmap(), 0,0)
 
 # end of class ImagePanel
+
+

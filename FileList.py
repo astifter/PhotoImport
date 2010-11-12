@@ -66,6 +66,7 @@ class FileList:
 
             self.files[datestr][f] = date
 
+
     def Filter(self):
 
         for date in sorted(self.files.keys()):
@@ -76,13 +77,14 @@ class FileList:
             if len(glob.glob(self.config.destvalue + "/" + destpath)) > 0:
                 del self.files[date]
 
+
     def ShowDialog(self):
 
         for date in sorted(self.files.keys()):
-            import CopyFrame
-            cf = CopyFrame.CopyFrame(self.parent, -1, "")
+            import CopyDialog
+            cf = CopyDialog.CopyDialog(self.parent, -1, "")
             cf.SetConfig(self.config, date, self.files[date], self.Copy)
-            cf.Show()
+            cf.ShowModal()
 
     def Copy(self,date,folder):
         dest = self.config.destvalue + "/" + folder
@@ -102,3 +104,25 @@ class FileList:
 
             print f + " " + path + "\n"
             shutil.copy2(f,path)
+
+    def __str__(self):
+
+        retval = []
+
+        for date in sorted(self.files.keys()):
+            retval.append("date: " + date)
+            for f in self.files[date]:
+                retval.append(f)
+
+        return "\n".join(retval)
+
+
+if __name__ == "__main__":
+
+    fl = FileList("/media/EOS_DIGITAL/DCIM/100CANON", "/mnt/data/andi/fotos/sessions/", "<date>_<name>")
+    print fl
+
+    fl.Filter()
+    print fl
+
+    fl.ShowDialog()
