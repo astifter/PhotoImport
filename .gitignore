@@ -4,3 +4,8 @@
 # editor backups
 *~
 *.orig
+
+# media files.
+*.jpg
+*.JPG
+*.CR2
