@@ -32,7 +32,7 @@ import ConfigData
 class ConfigFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         # begin wxGlade: ConfigFrame.__init__
-        kwds["style"] = wx.DEFAULT_FRAME_STYLE
+        kwds["style"] = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.MAXIMIZE_BOX|wx.SYSTEM_MENU|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL|wx.CLIP_CHILDREN
         wx.Frame.__init__(self, *args, **kwds)
         self.mainpanel = wx.Panel(self, -1, style=wx.NO_BORDER)
         self.sizer_4_staticbox = wx.StaticBox(self.mainpanel, -1, "Destination Folder")
@@ -71,6 +71,7 @@ class ConfigFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: ConfigFrame.__set_properties
         self.SetTitle("Configuration")
+        self.SetSize((784, 357))
         self.srcrecursive.SetMinSize((100,37))
         self.srcvalue.SetMinSize((300, 27))
         self.srcselect.SetMinSize((60, 29))
@@ -121,9 +122,9 @@ class ConfigFrame(wx.Frame):
         self.mainpanel.SetSizer(sizer_1)
         mainsizer.Add(self.mainpanel, 1, wx.EXPAND, 0)
         self.SetSizer(mainsizer)
-        mainsizer.Fit(self)
         mainsizer.SetSizeHints(self)
         self.Layout()
+        self.Centre()
         # end wxGlade
 
     def __get_config(self):
