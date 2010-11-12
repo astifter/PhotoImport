@@ -56,14 +56,22 @@ class ImagePanel(wx.Panel):
     def display(self, imagename):
         exif = pyexiv2.ImageMetadata(imagename)
         exif.read()
-        if exif.mime_type == 'image/jpeg':
+
+        imagetype=""
+        if exif.mime_type == 'image/jpeg' or exif.mime_type == 'image/png':
             f = open(imagename,"rb")
             data = f.read()
             f.close()
+            imagetype = exif.mime_type
         else:
             data = exif.previews[-1].data
+            imagetype = 'image/jpeg'
 
-        self.image = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_JPEG)
+        if imagetype == 'image/jpeg':
+            self.image = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_JPEG)
+        elif imagetype == 'image/png':
+            self.image = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_PNG)
+
         wi = self.image.GetWidth()
         hi = self.image.GetHeight()
         w,h = self.GetSizeTuple()
