@@ -33,7 +33,7 @@ from ImagePanel import ImagePanel
 class CopyDialog(wx.Dialog):
     def __init__(self, *args, **kwds):
         # begin wxGlade: CopyDialog.__init__
-        kwds["style"] = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.THICK_FRAME
+        kwds["style"] = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX|wx.THICK_FRAME
         wx.Dialog.__init__(self, *args, **kwds)
         self.splitter1 = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
         self.headerlbl = wx.TextCtrl(self, -1, "These files will be copied for date <date>:", style=wx.NO_BORDER)
@@ -57,12 +57,12 @@ class CopyDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.evt_neverbtn, self.neverbtn)
         self.Bind(wx.EVT_BUTTON, self.evt_okbtn, self.okbtn)
         # end wxGlade
+        self.Bind(wx.EVT_SIZE, self.evt_splitter1_resize, self)
 
     def __set_properties(self):
         # begin wxGlade: CopyDialog.__set_properties
         self.SetTitle("Copy Files")
         self.SetSize((786, 620))
-        self.SetForegroundColour(wx.Colour(0, 0, 0))
         self.headerlbl.SetMinSize((300, 27))
         self.filelst.SetMinSize((393, 473))
         self.destlbl.SetMinSize((100, 17))
@@ -114,20 +114,27 @@ class CopyDialog(wx.Dialog):
         self.namevalue.SetValue(pattern)
 
     def SetFiles(self, files):
-        self.filelst.InsertColumn(0,"Name",width=self.filelst.GetSize().width)
+        self.filelst.InsertColumn(0,"Name",width=wx.LIST_AUTOSIZE)
 
         for i in files.keys():
             self.filelst.InsertStringItem(100,i)
+
+        self.filelst.SetColumnWidth(0,width=wx.LIST_AUTOSIZE)
 
     def SetCopyHandler(self, handler):
         self.handler = handler
 
     def evt_splitter1_resize(self, event): # wxGlade: CopyDialog.<event_handler>
-        self.filelst.SetColumnWidth(0,self.filelst.GetSize().width)
+        idx = self.filelst.GetFirstSelected()
+        if idx != -1:
+            self.previewpane.display(self.filelst.GetItemText(idx))
+        event.Skip()
 
     def evt_filelst_select(self, event): # wxGlade: CopyDialog.<event_handler>
         idx = self.filelst.GetFirstSelected()
-        self.previewpane.display(self.filelst.GetItemText(idx))
+        if idx != -1:
+            self.previewpane.display(self.filelst.GetItemText(idx))
+        event.Skip()
 
     def evt_cancelbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         self.Destroy()
@@ -140,5 +147,6 @@ class CopyDialog(wx.Dialog):
         import os
         path = self.destvalue.GetValue() + "/" + self.namevalue.GetValue().replace("<name>", "never_import")
         os.mkdir(path)
+        event.Skip()
 
 # end of class CopyDialog

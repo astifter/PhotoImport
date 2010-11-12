@@ -40,8 +40,10 @@ class ImagePanel(wx.Panel):
         self.__set_properties()
         self.__do_layout()
         # end wxGlade
-        self.image = None  # wxPython image
-        wx.EVT_PAINT(self, self.OnPaint)
+        self._imagedata = None
+        self._drawdata = None
+        self._loadedimage = ""
+        self.Bind(wx.EVT_PAINT, self.OnPaint, self)
 
     def __set_properties(self):
         # begin wxGlade: ImagePanel.__set_properties
@@ -54,40 +56,44 @@ class ImagePanel(wx.Panel):
         # end wxGlade
 
     def display(self, imagename):
-        exif = pyexiv2.ImageMetadata(imagename)
-        exif.read()
+        if self._loadedimage != imagename:
+            exif = pyexiv2.ImageMetadata(imagename)
+            exif.read()
 
-        imagetype=""
-        if exif.mime_type == 'image/jpeg' or exif.mime_type == 'image/png':
-            f = open(imagename,"rb")
-            data = f.read()
-            f.close()
-            imagetype = exif.mime_type
-        else:
-            data = exif.previews[-1].data
-            imagetype = 'image/jpeg'
+            imagetype=""
+            if exif.mime_type == 'image/jpeg' or exif.mime_type == 'image/png':
+                f = open(imagename,"rb")
+                data = f.read()
+                f.close()
+                imagetype = exif.mime_type
+            else:
+                data = exif.previews[-1].data
+                imagetype = 'image/jpeg'
 
-        if imagetype == 'image/jpeg':
-            self.image = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_JPEG)
-        elif imagetype == 'image/png':
-            self.image = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_PNG)
+            if imagetype == 'image/jpeg':
+                self._imagedata = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_JPEG)
+            elif imagetype == 'image/png':
+                self._imagedata = wx.ImageFromStream(io.BytesIO(data),wx.BITMAP_TYPE_PNG)
 
-        wi = self.image.GetWidth()
-        hi = self.image.GetHeight()
+            self._loadedimage = imagename
+
+        wi = (float)(self._imagedata.GetWidth())
+        hi = (float)(self._imagedata.GetHeight())
         w,h = self.GetSizeTuple()
 
-        scale = wi/w
+        scale = wi/(float)(w)
         if (hi/h) > scale:
-            scale = hi/h
+            scale = hi/(float)(h)
 
-        self.image.Rescale(wi/scale,hi/scale)
+        self._drawdata = self._imagedata.Copy()
+        self._drawdata.Rescale(wi/scale,hi/scale)
 
         self.Refresh(True)
 
     def OnPaint(self, evt):
         dc = wx.PaintDC(self)
-        if self.image:
-            dc.DrawBitmap(self.image.ConvertToBitmap(), 0,0)
+        if self._imagedata:
+            dc.DrawBitmap(self._drawdata.ConvertToBitmap(), 0,0)
 
 # end of class ImagePanel
 
