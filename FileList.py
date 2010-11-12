@@ -43,9 +43,19 @@ class FileList:
 
         for f in filelist:
             exif = pyexiv2.ImageMetadata(f)
-            exif.read()
+            try:
+                exif.read()
+            except:
+                continue
 
-            fm = exif['Exif.Photo.DateTimeOriginal'].value
+            try:
+                fm = exif['Exif.Photo.DateTimeOriginal'].value
+            except:
+                try:
+                    fm = exif['Exif.Photo.DateTime'].value
+                except:
+                    fs = os.stat(f)
+                    fm = datetime.datetime.fromtimestamp(fs.st_mtime)
 
             if fm.hour < 6:
                 date = fm - datetime.timedelta(days=1)
