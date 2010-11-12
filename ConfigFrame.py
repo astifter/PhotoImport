@@ -136,11 +136,20 @@ class ConfigFrame(wx.Frame):
         self.filenamevalue.SetValue(self.config.filenamevalue)
         self.evt_renamefiles(None)
 
+    def __set_config(self):
+        self.config.srcrecursive = self.srcrecursive.GetValue()
+        self.config.srcvalue = self.srcvalue.GetValue()
+        self.config.destvalue = self.destvalue.GetValue()
+        self.config.foldernamevalue = self.foldernamevalue.GetValue()
+        self.config.renamefiles = self.renamefiles.GetValue()
+        self.config.filenamevalue = self.filenamevalue.GetValue()
+
     def evt_cancelbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         self.Close()
 
     def evt_okbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         import FileList
+        self.__set_config()
         self.filelist = FileList.FileList(self.config, self)
         self.filelist.Filter()
         self.filelist.ShowDialog()
@@ -158,6 +167,7 @@ class ConfigFrame(wx.Frame):
             self.destvalue.SetValue(dlg.GetPath())
 
     def evt_close(self, event):
+        self.__set_config()
         self.config.Save()
         event.Skip()
 
