@@ -147,13 +147,11 @@ class CopyDialog(wx.Dialog):
     def evt_cancelbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         """ Closes the window. """
         self.Close()
-        event.Skip()
 
     def evt_okbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         """ Calls back the handler to actually copy the pictures. """
         self.handler(self.date, self.namevalue.GetValue())
         self.Close()
-        event.Skip()
 
     def evt_neverbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         """ 

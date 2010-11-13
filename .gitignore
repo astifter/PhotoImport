@@ -5,9 +5,14 @@
 *~
 *.orig
 
+# log files
+pylint.log
+PhotoImport.log
+
 # media files.
 *.jpg
 *.JPG
 *.CR2
-pylint.log
-.dot
+*.dot
+*.png
+*.PNG

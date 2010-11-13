@@ -161,7 +161,6 @@ class ConfigFrame(wx.Frame):
     def evt_cancelbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Closes the window. """
         self.Close()
-        event.Skip()
 
     def evt_okbtn(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Creates the FileList and hands control to it. """
@@ -181,7 +180,6 @@ class ConfigFrame(wx.Frame):
                 self.srcvalue.SetValue(dlg.GetPath())
         except:
             logging.error("Error during source folder selection.")
-        event.Skip()
 
     def evt_browsedest(self, event): # wxGlade: ConfigFrame.<event_handler>
         try:
@@ -192,19 +190,16 @@ class ConfigFrame(wx.Frame):
                 self.destvalue.SetValue(dlg.GetPath())
         except:
             logging.error("Error during destination folder selection.")
-        event.Skip()
 
     def evt_close(self, event):
         """ Stores the configured values to the config, saves it and exits. """
         self.__set_config()
         self.config.save()
-        self.Close()
-        event.Skip()
+        self.evt_cancelbtn(event)
 
     def evt_renamefiles(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Toggles the changebility of the file rename pattern. """
         self.filenamevalue.Enable(self.renamefiles.GetValue())
-        event.Skip()
 
 # end of class ConfigFrame
 

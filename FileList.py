@@ -156,7 +156,7 @@ class FileList:
 
             try:
                 shutil.copy2(filename, path)
-                logging.info("Copied file %s to %s." $ (filename, path))
+                logging.info("Copied file %s to %s." % (filename, path))
             except:
                 logging.error("Can not copy file %s to %s, skipping." % (filename, path))
 

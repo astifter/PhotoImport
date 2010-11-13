@@ -120,7 +120,6 @@ class ImagePanel(wx.Panel):
             drawingcontext = wx.PaintDC(self)
             if self._imagedata:
                 drawingcontext.DrawBitmap(self._drawdata.ConvertToBitmap(), 0, 0)
-            event.Skip()
         except:
             logging.error("Can not display image, no preview.")
 

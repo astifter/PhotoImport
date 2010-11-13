@@ -32,9 +32,6 @@ class PhotoImport(wx.App):
     This is the main class for the PhotoImport project.
     """
 
-    def __init__(self):
-        wx.App.__init__()
-
     def OnInit(self):
         """
         The OnInit function of an wx.App initialises everything. In this case it
@@ -49,8 +46,12 @@ class PhotoImport(wx.App):
 # end of class PhotoImport
 
 if __name__ == "__main__":
+    logfilename = 'PhotoImport.log'
+    logging.basicConfig(filename=logfilename,level=logging.ERROR)
     try:
-        photoimport = PhotoImport(0)
+        photoimport = PhotoImport()
         photoimport.MainLoop()
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        import sys
+        logging.error("Unexpected error:", sys.exc_info()[0])
+        raise
