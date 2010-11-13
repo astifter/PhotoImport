@@ -50,7 +50,7 @@
                                     <object class="wxButton" name="srcselect" base="EditButton">
                                         <label>. . .</label>
                                         <events>
-                                            <handler event="EVT_BUTTON">evt_BrowseSource</handler>
+                                            <handler event="EVT_BUTTON">evt_browsesource</handler>
                                         </events>
                                         <size>60, 29</size>
                                     </object>
@@ -89,7 +89,7 @@
                                     <object class="wxButton" name="destselect" base="EditButton">
                                         <label>. . .</label>
                                         <events>
-                                            <handler event="EVT_BUTTON">evt_BrowseDest</handler>
+                                            <handler event="EVT_BUTTON">evt_browsedest</handler>
                                         </events>
                                         <size>60, 29</size>
                                     </object>
@@ -255,13 +255,13 @@
                 <flag>wxEXPAND</flag>
                 <border>0</border>
                 <option>1</option>
-                <object class="wxSplitterWindow" name="splitter1" base="EditSplitterWindow">
+                <object class="wxSplitterWindow" name="splitter" base="EditSplitterWindow">
                     <style>wxSP_3D|wxSP_BORDER</style>
                     <orientation>wxSPLIT_VERTICAL</orientation>
                     <window_2>previewpane</window_2>
                     <window_1>filelst</window_1>
                     <events>
-                        <handler event="EVT_SPLITTER_SASH_POS_CHANGED">evt_splitter1_resize</handler>
+                        <handler event="EVT_SPLITTER_SASH_POS_CHANGED">evt_splitter_resize</handler>
                     </events>
                     <object class="wxListCtrl" name="filelst" base="EditListCtrl">
                         <style>wxLC_REPORT|wxSUNKEN_BORDER</style>
