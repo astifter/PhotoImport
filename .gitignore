@@ -9,3 +9,5 @@
 *.jpg
 *.JPG
 *.CR2
+pylint.log
+.dot

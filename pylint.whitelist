@@ -1,0 +1,10 @@
+^^
+C0301: 35: Line too long
+R0902: 32:ConfigFrame: Too many instance attributes (22/7)
+C0111: 32:ConfigFrame: Missing docstring
+C0111: 71:ConfigFrame.__set_properties: Missing docstring
+C0324: 75:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 78:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 83:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 86:ConfigFrame.__set_properties: Comma not followed by a space
+C0111: 92:ConfigFrame.__do_layout: Missing docstring
