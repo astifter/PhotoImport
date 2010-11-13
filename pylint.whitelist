@@ -1,10 +1,23 @@
-^^
-C0301: 35: Line too long
-R0902: 32:ConfigFrame: Too many instance attributes (22/7)
-C0111: 32:ConfigFrame: Missing docstring
-C0111: 71:ConfigFrame.__set_properties: Missing docstring
-C0324: 75:ConfigFrame.__set_properties: Comma not followed by a space
-C0324: 78:ConfigFrame.__set_properties: Comma not followed by a space
-C0324: 83:ConfigFrame.__set_properties: Comma not followed by a space
-C0324: 86:ConfigFrame.__set_properties: Comma not followed by a space
-C0111: 92:ConfigFrame.__do_layout: Missing docstring
+.*^^.*
+C0301: 43: Line too long (145/120)
+R0902: 35:ConfigFrame: Too many instance attributes (22/7)
+C0111: 81:ConfigFrame.__set_properties: Missing docstring
+C0324: 85:ConfigFrame.__set_properties: Comma not followed by a space
+        self.srcrecursive.SetMinSize((100,37))
+C0324: 88:ConfigFrame.__set_properties: Comma not followed by a space
+        self.panel_2.SetMinSize((100,37))
+C0324: 93:ConfigFrame.__set_properties: Comma not followed by a space
+        self.spacepanel1.SetMinSize((65,29))
+C0324: 96:ConfigFrame.__set_properties: Comma not followed by a space
+        self.spacepanel4.SetMinSize((65,29))
+C0111:102:ConfigFrame.__do_layout: Missing docstring
+W0201:132:ConfigFrame.__get_config: Attribute 'config' defined outside __init__
+R0902: 37:CopyDialog: Too many instance attributes (14/7)
+C0111: 71:CopyDialog.__set_properties: Missing docstring
+C0111: 87:CopyDialog.__do_layout: Missing docstring
+W0612: 44:FileList.__init__: Unused variable 'dirs'
+W0612:114:FileList.copy: Unused variable 'root'
+C0111: 50:ImagePanel.__set_properties: Missing docstring
+C0111: 55:ImagePanel.__do_layout: Missing docstring
+C0103: 37:PhotoImport.OnInit: Invalid name "OnInit" (should match [a-z_][a-z0-9_]{2,30}$)
+R0903: 29:PhotoImport: Too few public methods (1/2)
