@@ -25,6 +25,7 @@ The main class for the PhotoImport project.
 
 import wx
 from ConfigFrame import ConfigFrame
+import logging
 
 class PhotoImport(wx.App):
     """
@@ -48,5 +49,8 @@ class PhotoImport(wx.App):
 # end of class PhotoImport
 
 if __name__ == "__main__":
-    photoimport = PhotoImport(0)
-    photoimport.MainLoop()
+    try:
+        photoimport = PhotoImport(0)
+        photoimport.MainLoop()
+    except:
+        print "Unexpected error:", sys.exc_info()[0]

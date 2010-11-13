@@ -24,6 +24,7 @@ The ConfigFrame module is called as first module to read all the configurations.
 
 import wx
 import ConfigData
+import logging
 
 # begin wxGlade: dependencies
 # end wxGlade
@@ -173,18 +174,24 @@ class ConfigFrame(wx.Frame):
 
     def evt_browsesource(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Opens a dialog to select source folder. """
-        dlg = wx.DirDialog(self, "Choose a Source Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
-        dlg.SetPath(self.srcvalue.GetValue())
-        if dlg.ShowModal() == wx.ID_OK:
-            self.srcvalue.SetValue(dlg.GetPath())
+        try:
+            dlg = wx.DirDialog(self, "Choose a Source Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+            dlg.SetPath(self.srcvalue.GetValue())
+            if dlg.ShowModal() == wx.ID_OK:
+                self.srcvalue.SetValue(dlg.GetPath())
+        except:
+            logging.error("Error during source folder selection.")
         event.Skip()
 
     def evt_browsedest(self, event): # wxGlade: ConfigFrame.<event_handler>
-        """ Opens dialog to select destination folder. """
-        dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
-        dlg.SetPath(self.srcvalue.GetValue())
-        if dlg.ShowModal() == wx.ID_OK:
-            self.destvalue.SetValue(dlg.GetPath())
+        try:
+            """ Opens dialog to select destination folder. """
+            dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+            dlg.SetPath(self.srcvalue.GetValue())
+            if dlg.ShowModal() == wx.ID_OK:
+                self.destvalue.SetValue(dlg.GetPath())
+        except:
+            logging.error("Error during destination folder selection.")
         event.Skip()
 
     def evt_close(self, event):

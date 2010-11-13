@@ -23,6 +23,7 @@
 import wx
 import pyexiv2
 import io
+import logging
 
 # begin wxGlade: dependencies
 # end wxGlade
@@ -60,47 +61,68 @@ class ImagePanel(wx.Panel):
     def display(self, imagename):
         """ Loads image from preview or file and converts it properly. """
         if self._loadedimage != imagename:
-            exif = pyexiv2.ImageMetadata(imagename)
-            exif.read()
+            try:
+                exif = pyexiv2.ImageMetadata(imagename)
+                exif.read()
+            except:
+                logging.error("Can not read EXIF info from file %s, no preview." % imagename)
+                return
 
             imagetype = ""
             if exif.mime_type == 'image/jpeg' or exif.mime_type == 'image/png':
-                filereader = open(imagename,"rb")
-                data = filereader.read()
-                filereader.close()
+                try:
+                    filereader = open(imagename,"rb")
+                    data = filereader.read()
+                    filereader.close()
+                except:
+                    logging.error("Can not read file %s, no preview." % imagename)
+                    return
                 imagetype = exif.mime_type
             else:
-                data = exif.previews[-1].data
+                try:
+                    data = exif.previews[-1].data
+                except:
+                    logging.error("Can not read EXIF preview from file %s, no preview." % imagename)
+                    return
                 imagetype = 'image/jpeg'
 
-            if imagetype == 'image/jpeg':
-                self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_JPEG)
-            elif imagetype == 'image/png':
-                self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_PNG)
+            try:
+                if imagetype == 'image/jpeg':
+                    self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_JPEG)
+                elif imagetype == 'image/png':
+                    self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_PNG)
+            except:
+                logging.error("Can not convert image %s with type %s, no preview." % (imagename, imagetype))
 
             self._loadedimage = imagename
 
-        imagewidth = (float)(self._imagedata.GetWidth())
-        imageheigth = (float)(self._imagedata.GetHeight())
-        panelwidth, panelheight = self.GetSizeTuple()
+        try:
+            imagewidth = (float)(self._imagedata.GetWidth())
+            imageheigth = (float)(self._imagedata.GetHeight())
+            panelwidth, panelheight = self.GetSizeTuple()
 
-        scale = imagewidth/(float)(panelwidth)
-        if (imageheigth/panelheight) > scale:
-            scale = imageheigth/(float)(panelheight)
+            scale = imagewidth/(float)(panelwidth)
+            if (imageheigth/panelheight) > scale:
+                scale = imageheigth/(float)(panelheight)
 
-        self._drawdata = self._imagedata.Copy()
-        self._drawdata.Rescale(imagewidth/scale, imageheigth/scale)
+            self._drawdata = self._imagedata.Copy()
+            self._drawdata.Rescale(imagewidth/scale, imageheigth/scale)
 
-        self.Refresh(True)
+            self.Refresh(True)
+        except:
+            logging.error("Can not convert image, no preview.")
 
     def OnPaint(self, event):
         """
         This paints the panel.
         """
-        drawingcontext = wx.PaintDC(self)
-        if self._imagedata:
-            drawingcontext.DrawBitmap(self._drawdata.ConvertToBitmap(), 0, 0)
-        event.Skip()
+        try:
+            drawingcontext = wx.PaintDC(self)
+            if self._imagedata:
+                drawingcontext.DrawBitmap(self._drawdata.ConvertToBitmap(), 0, 0)
+            event.Skip()
+        except:
+            logging.error("Can not display image, no preview.")
 
 # end of class ImagePanel
 

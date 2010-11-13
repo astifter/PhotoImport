@@ -25,6 +25,7 @@ import os
 import datetime
 import shutil
 import pyexiv2
+import logging
 
 class FileList:
     """
@@ -41,17 +42,26 @@ class FileList:
 
         if self.config.srcrecursive:
             filelist = []
-            for (dirp, dirs, files) in os.walk(self.config.srcvalue + "/"):
-                for filename in files:
-                    filelist.append(os.path.join(dirp, filename))
+            try:
+                for (dirp, dirs, files) in os.walk(self.config.srcvalue + "/"):
+                    for filename in files:
+                        filelist.append(os.path.join(dirp, filename))
+            except:
+                logging.error("Can not read recursive folders, aborting.")
+                return
         else:
-            filelist = glob.glob(self.config.srcvalue + "/*")
+            try:
+                filelist = glob.glob(self.config.srcvalue + "/*")
+            except:
+                logging.error("Can not read files from folder %s, aborting." % self.config.srcvalue)
+                return
 
         for filename in filelist:
-            exif = pyexiv2.ImageMetadata(filename)
             try:
+                exif = pyexiv2.ImageMetadata(filename)
                 exif.read()
             except:
+                logging.info("Can not read exif information from %s, skipping." % filename)
                 continue
 
             try:
@@ -60,8 +70,13 @@ class FileList:
                 try:
                     filedate = exif['Exif.Photo.DateTime'].value
                 except:
-                    filestat = os.stat(filename)
-                    filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
+                    try:
+                        filestat = os.stat(filename)
+                        filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
+                        logging.info("Can not read EXIF date, using file system date.")
+                    except:
+                        logging.error("Can not access file modification date for %s, skipping." % filename)
+                        continue
 
             if filedate.hour < 6:
                 date = filedate - datetime.timedelta(days=1)
@@ -74,39 +89,60 @@ class FileList:
                 self.files[datestr] = {}
 
             self.files[datestr][filename] = date
+            logging.info("Read file %s with date %s." % (filename, datestr))
+            
+        self.finished = True
 
     def filter(self):
         """
         This removes all the files where the date already has a folder.
         """
 
+        if not self.finished:
+            logging.error("Can not filter files, was not read")
+
         for date in sorted(self.files.keys()):
 
             destpath = self.config.foldernamevalue.replace("<date>", date)
             destpath = destpath.replace("<name>", "*")
 
-            if len(glob.glob(self.config.destvalue + "/" + destpath)) > 0:
-                del self.files[date]
-
+            try:
+                if len(glob.glob(self.config.destvalue + "/" + destpath)) > 0:
+                    del self.files[date]
+            except:
+                logging.error("Can not access folder %s, not filtering." % self.config.destvalue)
 
     def showdialog(self):
         """ This shows the CopyDialog for each days. """
 
+        if not self.finished:
+            logging.error("Can not show copy dialog, was not read")
+
         for date in sorted(self.files.keys()):
-            import CopyDialog
-            copydialog = CopyDialog.CopyDialog(self.parent, -1, "")
-            copydialog.setconfig(self.config, date, self.files[date], self.copy)
-            copydialog.ShowModal()
+            try:
+                import CopyDialog
+                copydialog = CopyDialog.CopyDialog(self.parent, -1, "")
+                copydialog.setconfig(self.config, date, self.files[date], self.copy)
+                copydialog.ShowModal()
+            except:
+                logging.error("Error during CopyDialog.")
 
     def copy(self, date, folder):
         """
         This actually copies the files, they are optionally renamed. 
         """
 
+        if not self.finished:
+            logging.error("Can not copy files, was not read")
+
         dest = self.config.destvalue + "/" + folder
 
-        print dest + "\n"
-        os.mkdir(dest)
+        try:
+            os.mkdir(dest)
+            logging.info("Created folder %s." % dest)
+        except:
+            logging.error("Can not create folder %s, skipping." % dest)
+            return
 
         for (filename, filedate) in self.files[date].items():
             path = dest
@@ -118,10 +154,16 @@ class FileList:
                 filename = filename.replace("<ext>", ext)
                 path = os.path.join(path, filename)
 
-            print filename + " " + path + "\n"
-            shutil.copy2(filename, path)
+            try:
+                shutil.copy2(filename, path)
+                logging.info("Copied file %s to %s." $ (filename, path))
+            except:
+                logging.error("Can not copy file %s to %s, skipping." % (filename, path))
 
     def __str__(self):
+
+        if not self.finished:
+            return "Files not read."
 
         retval = []
 
