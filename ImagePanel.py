@@ -46,7 +46,7 @@ class ImagePanel(wx.Panel):
         self._imagedata = None
         self._drawdata = None
         self._loadedimage = ""
-        self.Bind(wx.EVT_PAINT, self.OnPaint, self)
+        self.Bind(wx.EVT_PAINT, self.evt_onpaint, self)
 
     def __set_properties(self):
         # begin wxGlade: ImagePanel.__set_properties
@@ -112,7 +112,7 @@ class ImagePanel(wx.Panel):
         except:
             logging.error("Can not convert image, no preview.")
 
-    def OnPaint(self, event):
+    def evt_onpaint(self, event):
         """
         This paints the panel.
         """
@@ -124,5 +124,3 @@ class ImagePanel(wx.Panel):
             logging.error("Can not display image, no preview.")
 
 # end of class ImagePanel
-
-

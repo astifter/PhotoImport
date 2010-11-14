@@ -27,6 +27,34 @@ import shutil
 import pyexiv2
 import logging
 
+def getfiledate(filename):
+    """ 
+    This takes a filename and tries to read the last modification date from
+    exif or filesystem. 
+    """
+    try:
+        exif = pyexiv2.ImageMetadata(filename)
+        exif.read()
+    except:
+        logging.info("Can not read exif information from %s, skipping." % filename)
+        return None
+
+    try:
+        filedate = exif['Exif.Photo.DateTimeOriginal'].value
+    except:
+        try:
+            filedate = exif['Exif.Photo.DateTime'].value
+        except:
+            try:
+                filestat = os.stat(filename)
+                filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
+                logging.info("Can not read EXIF date, using file system date.")
+            except:
+                logging.error("Can not access file modification date for %s, skipping." % filename)
+                return None
+    return filedate
+
+
 class FileList:
     """
     This module reads a list of files, sorts the into "days" and asks the user
@@ -57,26 +85,9 @@ class FileList:
                 return
 
         for filename in filelist:
-            try:
-                exif = pyexiv2.ImageMetadata(filename)
-                exif.read()
-            except:
-                logging.info("Can not read exif information from %s, skipping." % filename)
+            filedate = getfiledate(filename)
+            if filedate is None:
                 continue
-
-            try:
-                filedate = exif['Exif.Photo.DateTimeOriginal'].value
-            except:
-                try:
-                    filedate = exif['Exif.Photo.DateTime'].value
-                except:
-                    try:
-                        filestat = os.stat(filename)
-                        filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
-                        logging.info("Can not read EXIF date, using file system date.")
-                    except:
-                        logging.error("Can not access file modification date for %s, skipping." % filename)
-                        continue
 
             if filedate.hour < 6:
                 date = filedate - datetime.timedelta(days=1)

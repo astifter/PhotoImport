@@ -1,23 +1,34 @@
 .*^^.*
-C0301: 43: Line too long (145/120)
-R0902: 35:ConfigFrame: Too many instance attributes (22/7)
-C0111: 81:ConfigFrame.__set_properties: Missing docstring
-C0324: 85:ConfigFrame.__set_properties: Comma not followed by a space
+C0301: 44: Line too long (145/120)
+R0902: 36:ConfigFrame: Too many instance attributes (22/7)
+C0111: 82:ConfigFrame.__set_properties: Missing docstring
+C0324: 86:ConfigFrame.__set_properties: Comma not followed by a space
         self.srcrecursive.SetMinSize((100,37))
-C0324: 88:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 89:ConfigFrame.__set_properties: Comma not followed by a space
         self.panel_2.SetMinSize((100,37))
-C0324: 93:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 94:ConfigFrame.__set_properties: Comma not followed by a space
         self.spacepanel1.SetMinSize((65,29))
-C0324: 96:ConfigFrame.__set_properties: Comma not followed by a space
+C0324: 97:ConfigFrame.__set_properties: Comma not followed by a space
         self.spacepanel4.SetMinSize((65,29))
-C0111:102:ConfigFrame.__do_layout: Missing docstring
-W0201:132:ConfigFrame.__get_config: Attribute 'config' defined outside __init__
-R0902: 37:CopyDialog: Too many instance attributes (14/7)
-C0111: 71:CopyDialog.__set_properties: Missing docstring
-C0111: 87:CopyDialog.__do_layout: Missing docstring
-W0612: 44:FileList.__init__: Unused variable 'dirs'
-W0612:114:FileList.copy: Unused variable 'root'
-C0111: 50:ImagePanel.__set_properties: Missing docstring
-C0111: 55:ImagePanel.__do_layout: Missing docstring
-C0103: 37:PhotoImport.OnInit: Invalid name "OnInit" (should match [a-z_][a-z0-9_]{2,30}$)
-R0903: 29:PhotoImport: Too few public methods (1/2)
+C0111:103:ConfigFrame.__do_layout: Missing docstring
+W0201:133:ConfigFrame.__get_config: Attribute 'config' defined outside __init__
+W0613:161:ConfigFrame.evt_cancelbtn: Unused argument 'event'
+W0613:165:ConfigFrame.evt_okbtn: Unused argument 'event'
+W0613:174:ConfigFrame.evt_browsesource: Unused argument 'event'
+W0613:184:ConfigFrame.evt_browsedest: Unused argument 'event'
+W0613:200:ConfigFrame.evt_renamefiles: Unused argument 'event'
+R0904: 36:ConfigFrame: Too many public methods (292/20)
+R0902: 38:CopyDialog: Too many instance attributes (14/7)
+C0111: 72:CopyDialog.__set_properties: Missing docstring
+C0111: 88:CopyDialog.__do_layout: Missing docstring
+W0613:147:CopyDialog.evt_cancelbtn: Unused argument 'event'
+W0613:151:CopyDialog.evt_okbtn: Unused argument 'event'
+R0904: 38:CopyDialog: Too many public methods (288/20)
+W0612: 74:FileList.__init__: Unused variable 'dirs'
+W0612:161:FileList.copy: Unused variable 'root'
+C0111: 51:ImagePanel.__set_properties: Missing docstring
+C0111: 56:ImagePanel.__do_layout: Missing docstring
+W0613:115:ImagePanel.evt_onpaint: Unused argument 'event'
+R0904: 35:ImagePanel: Too many public methods (246/20)
+C0103: 35:PhotoImport.OnInit: Invalid name "OnInit"
+R0904: 30:PhotoImport: Too many public methods (66/20)
