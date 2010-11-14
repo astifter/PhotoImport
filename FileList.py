@@ -149,27 +149,13 @@ class FileList:
             if self.config.renamefiles:
                 (root, ext) = os.path.splitext(filename)
                 ext = ext[1:]
-                filename = self.config.filenamevalue.replace("<date>", date)
-                filename = filename.replace("<time>", filedate.strftime("%H%M%S"))
-                filename = filename.replace("<ext>", ext)
-                path = os.path.join(path, filename)
+                newname = self.config.filenamevalue.replace("<date>", date)
+                newname = newname.replace("<time>", filedate.strftime("%H%M%S"))
+                newname = newname.replace("<ext>", ext)
+                path = os.path.join(path, newname)
 
             try:
                 shutil.copy2(filename, path)
                 logging.info("Copied file %s to %s." % (filename, path))
             except:
                 logging.error("Can not copy file %s to %s, skipping." % (filename, path))
-
-    def __str__(self):
-
-        if not self.finished:
-            return "Files not read."
-
-        retval = []
-
-        for date in sorted(self.files.keys()):
-            retval.append("date: " + date)
-            for filename in self.files[date]:
-                retval.append(filename)
-
-        return "\n".join(retval)

@@ -182,8 +182,8 @@ class ConfigFrame(wx.Frame):
             logging.error("Error during source folder selection.")
 
     def evt_browsedest(self, event): # wxGlade: ConfigFrame.<event_handler>
+        """ Opens dialog to select destination folder. """
         try:
-            """ Opens dialog to select destination folder. """
             dlg = wx.DirDialog(self, "Choose a Destination Folder", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
             dlg.SetPath(self.srcvalue.GetValue())
             if dlg.ShowModal() == wx.ID_OK:
