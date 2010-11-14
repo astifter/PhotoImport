@@ -169,7 +169,7 @@ class ConfigFrame(wx.Frame):
         self.filelist = FileList.FileList(self.config, self)
         self.filelist.filter()
         self.filelist.showdialog()
-        self.evt_close(event)
+        self.Close()
 
     def evt_browsesource(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Opens a dialog to select source folder. """
@@ -195,7 +195,7 @@ class ConfigFrame(wx.Frame):
         """ Stores the configured values to the config, saves it and exits. """
         self.__set_config()
         self.config.save()
-        self.evt_cancelbtn(event)
+        event.Skip()
 
     def evt_renamefiles(self, event): # wxGlade: ConfigFrame.<event_handler>
         """ Toggles the changebility of the file rename pattern. """
