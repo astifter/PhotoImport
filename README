@@ -1,4 +1,21 @@
 ################################################################################
+# Copyright 2010 Andreas Neustifter (andreas.neustifter@gmail.com)
+#
+# This file is part of PhotoImport.
+#
+# PhotoImport is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# PhotoImport is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# PhotoImport. If not, see <http://www.gnu.org/licenses/>.
+################################################################################
 PhotoImport
 
 ################################################################################
@@ -21,23 +38,4 @@ If there is a folder created for this day in the destination the pictures are
 not imported.
 For each unimported day an import dialog is shown where the destination folder
 name can be configured and previews of the pictures can be reviewed. After 
-closing the dialog the folder is created and the pictures are copied. 
-
-################################################################################
-# Copyright 2010 Andreas Neustifter (andreas.neustifter@gmail.com)
-#
-# This file is part of PhotoImport.
-#
-# PhotoImport is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-#
-# PhotoImport is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-# details.
-#
-# You should have received a copy of the GNU General Public License along with
-# PhotoImport. If not, see <http://www.gnu.org/licenses/>.
-################################################################################
+closing the dialog the folder is created and the pictures are copied.
