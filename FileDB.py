@@ -98,14 +98,3 @@ class FileDB:
         dbfile.write(filename + "\n")
         dbfile.write(status + "\n")
         dbfile.close()
-
-
-if __name__ == "__main__":
-
-    import sys
-    fdb = FileDB()
-
-    if sys.argv[1] == "get":
-        print fdb.getstatus(sys.argv[2])
-    elif sys.argv[1] == "set":
-        fdb.setstatus(sys.argv[2], sys.argv[3])
