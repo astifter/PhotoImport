@@ -26,6 +26,7 @@ import datetime
 import shutil
 import pyexiv2
 import logging
+import FileDB
 
 def getfiledate(filename):
     """ 
@@ -67,6 +68,7 @@ class FileList:
         self.parent = parent
         self.config = config
         self.files = {}
+        self.statusdb = FileDB.FileDB()
 
         if self.config.srcrecursive:
             filelist = []
@@ -106,28 +108,28 @@ class FileList:
 
     def filter(self):
         """
-        This removes all the files where the date already has a folder.
+        This removes all the files where the status is already set.
         """
 
         if not self.finished:
-            logging.error("Can not filter files, was not read")
+            logging.error("Can not filter files, was not read.")
 
-        for date in sorted(self.files.keys()):
+        for date in self.files.keys():
+            for filepath in self.files[date].keys():
+                status = self.statusdb.getstatus(filepath)
+                if status is not None:
+                    logging.debug("Removed %s from filelist (status %s)." % (filepath, status))
+                    del self.files[date][filepath]
 
-            destpath = self.config.foldernamevalue.replace("<date>", date)
-            destpath = destpath.replace("<name>", "*")
-
-            try:
-                if len(glob.glob(self.config.destvalue + "/" + destpath)) > 0:
-                    del self.files[date]
-            except:
-                logging.error("Can not access folder %s, not filtering." % self.config.destvalue)
+            if len(self.files[date].keys()) <= 0:
+                logging.debug("Removed %s from filelist." % date)
+                del self.files[date]
 
     def showdialog(self):
         """ This shows the CopyDialog for each days. """
 
         if not self.finished:
-            logging.error("Can not show copy dialog, was not read")
+            logging.error("Can not show copy dialog, was not read.")
 
         for date in sorted(self.files.keys()):
             try:
@@ -138,35 +140,51 @@ class FileList:
             except:
                 logging.error("Error during CopyDialog.")
 
-    def copy(self, date, folder):
+    def copy(self, date, folder, do_copy=True):
         """
         This actually copies the files, they are optionally renamed. 
         """
 
         if not self.finished:
-            logging.error("Can not copy files, was not read")
+            logging.error("Can not copy files, was not read.")
 
         dest = self.config.destvalue + "/" + folder
 
-        try:
-            os.mkdir(dest)
-            logging.info("Created folder %s." % dest)
-        except:
-            logging.error("Can not create folder %s, skipping." % dest)
-            return
+        if do_copy and not os.path.exists(dest):
+            try:
+                os.mkdir(dest)
+                logging.info("Created folder %s." % dest)
+            except:
+                logging.error("Can not create folder %s, skipping." % dest)
+                return
 
         for (filename, filedate) in self.files[date].items():
-            path = dest
+            if self.statusdb.getstatus(filename) is not None:
+                logging.error("File %s has status set but was not filtered.")
+                continue
+
+            if not do_copy:
+                logging.info("Marking %s as never." % filename)
+                self.statusdb.setstatus(filename, "never")
+                continue
+
             if self.config.renamefiles:
                 (root, ext) = os.path.splitext(filename)
                 ext = ext[1:]
                 newname = self.config.filenamevalue.replace("<date>", date)
                 newname = newname.replace("<time>", filedate.strftime("%H%M%S"))
                 newname = newname.replace("<ext>", ext)
-                path = os.path.join(path, newname)
+                path = os.path.join(dest, newname)
+            else:
+                path = os.path.join(dest, os.path.basename(filename))
+
+            if os.path.exists(path):
+                logging.error("File %s already exists in path %s, skipping." % (filename, path))
+                continue
 
             try:
                 shutil.copy2(filename, path)
                 logging.info("Copied file %s to %s." % (filename, path))
+                self.statusdb.setstatus(filename, "copied to %s" % path)
             except:
                 logging.error("Can not copy file %s to %s, skipping." % (filename, path))
