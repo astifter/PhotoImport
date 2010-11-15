@@ -24,8 +24,12 @@ pylint.log: *.py Makefile pylint.rc pylint.whitelist
 	-pylint --rcfile pylint.rc *.py 2>&1 | grep -v -f pylint.whitelist > pylint.log
 
 coverage:
-	-python-coverage -x PhotoImport.py
-	-python-coverage -a
+	-python-coverage run -a PhotoImport.py
+	-python-coverage annotate
+
+coverage-report:
+	-mkdir $@
+	-python-coverage html -d $@
 
 clean:
 	@echo "Warning!"
