@@ -47,7 +47,8 @@ class PhotoImport(wx.App):
 
 if __name__ == "__main__":
     logfilename = 'PhotoImport.log'
-    logging.basicConfig(filename=logfilename, level=logging.INFO)
+    logging.basicConfig(filename=logfilename, level=logging.DEBUG)
+    logging.debug("------------------ Starting log. ------------------")
     try:
         photoimport = PhotoImport()
         photoimport.MainLoop()
