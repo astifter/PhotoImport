@@ -26,3 +26,17 @@ pylint.log: *.py Makefile pylint.rc pylint.whitelist
 coverage:
 	-python-coverage -x PhotoImport.py
 	-python-coverage -a
+
+clean:
+	@echo "Warning!"
+	@echo "The following files and folders will be deleted:"
+	@echo " *.orig, *~, Dest/* "
+	@echo "The following commands will be executed:"
+	@echo " git clean -x -f"
+	@echo " find . -name PhotoImport.db -delete"
+	@echo "To run use 'make clean-really'."
+
+clean-really:
+	rm -rf *.orig *~ Dest/*
+	git clean -x -f
+	find . -name PhotoImport.db -delete
