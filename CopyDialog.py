@@ -156,3 +156,5 @@ class CopyDialog(wx.Dialog):
         """ Calls back the handler to mark the file as never. """
         self.handler(self.date, self.namevalue.GetValue(), False)
         self.Destroy()
+
+# end of class CopyDialog
