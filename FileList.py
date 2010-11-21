@@ -73,7 +73,7 @@ class FileList:
         if self.config.srcrecursive:
             filelist = []
             try:
-                for (dirp, dirs, files) in os.walk(self.config.srcvalue + "/"):
+                for (dirp, dirs, files) in os.walk(self.config.srcvalue + os.sep):
                     for filename in files:
                         filelist.append(os.path.join(dirp, filename))
             except:
@@ -81,7 +81,7 @@ class FileList:
                 return
         else:
             try:
-                filelist = glob.glob(self.config.srcvalue + "/*")
+                filelist = glob.glob(self.config.srcvalue + os.sep + "*")
             except:
                 logging.error("Can not read files from folder %s, aborting." % self.config.srcvalue)
                 return
@@ -148,7 +148,7 @@ class FileList:
         if not self.finished:
             logging.error("Can not copy files, was not read.")
 
-        dest = self.config.destvalue + "/" + folder
+        dest = os.path.join(self.config.destvalue, folder)
 
         if do_copy and not os.path.exists(dest):
             try:
