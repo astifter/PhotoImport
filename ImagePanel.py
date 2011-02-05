@@ -24,6 +24,7 @@ import wx
 import pyexiv2
 import io
 import logging
+import ExifHandler
 
 # begin wxGlade: dependencies
 # end wxGlade
@@ -61,40 +62,10 @@ class ImagePanel(wx.Panel):
     def display(self, imagename):
         """ Loads image from preview or file and converts it properly. """
         if self._loadedimage != imagename:
-            try:
-                exif = pyexiv2.ImageMetadata(imagename)
-                exif.read()
-            except:
-                logging.error("Can not read EXIF info from file %s, no preview." % imagename)
-                return
+            self._imagedata = ExifHandler.getthumbnail(imagename)
 
-            imagetype = ""
-            if exif.mime_type == 'image/jpeg' or exif.mime_type == 'image/png':
-                try:
-                    filereader = open(imagename,"rb")
-                    data = filereader.read()
-                    filereader.close()
-                except:
-                    logging.error("Can not read file %s, no preview." % imagename)
-                    return
-                imagetype = exif.mime_type
-            else:
-                try:
-                    data = exif.previews[-1].data
-                except:
-                    logging.error("Can not read EXIF preview from file %s, no preview." % imagename)
-                    return
-                imagetype = 'image/jpeg'
-
-            try:
-                if imagetype == 'image/jpeg':
-                    self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_JPEG)
-                elif imagetype == 'image/png':
-                    self._imagedata = wx.ImageFromStream(io.BytesIO(data), wx.BITMAP_TYPE_PNG)
-            except:
-                logging.error("Can not convert image %s with type %s, no preview." % (imagename, imagetype))
-
-            self._loadedimage = imagename
+            if self._imagedata is not None:
+                self._loadedimage = imagename
 
         try:
             imagewidth = (float)(self._imagedata.GetWidth())

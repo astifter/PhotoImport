@@ -24,9 +24,15 @@ import glob
 import os
 import datetime
 import shutil
-import pyexiv2
+
+import sys
+import stat
+import subprocess
+
 import logging
 import FileDB
+import ExifHandler
+
 
 def getfiledate(filename):
     """ 
@@ -34,25 +40,15 @@ def getfiledate(filename):
     exif or filesystem. 
     """
     try:
-        exif = pyexiv2.ImageMetadata(filename)
-        exif.read()
-    except:
-        logging.info("Can not read exif information from %s, skipping." % filename)
-        return None
-
-    try:
-        filedate = exif['Exif.Photo.DateTimeOriginal'].value
+        filedate = ExifHandler.getfiledate(filename)
     except:
         try:
-            filedate = exif['Exif.Photo.DateTime'].value
+            filestat = os.stat(filename)
+            filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
+            logging.info("Can not read EXIF date, using file system date.")
         except:
-            try:
-                filestat = os.stat(filename)
-                filedate = datetime.datetime.fromtimestamp(filestat.st_mtime)
-                logging.info("Can not read EXIF date, using file system date.")
-            except:
-                logging.error("Can not access file modification date for %s, skipping." % filename)
-                return None
+            logging.error("Can not access file modification date for %s, skipping." % filename)
+            return None
     return filedate
 
 
