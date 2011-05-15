@@ -19,3 +19,4 @@ PhotoImport.log
 *.PNG
 PhotoImport.db
 .coverage
+exiftool.exe
