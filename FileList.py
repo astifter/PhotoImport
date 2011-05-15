@@ -83,6 +83,9 @@ class FileList:
                 return
 
         for filename in filelist:
+            if filename.endswith("PhotoImport.db"):
+                continue
+
             filedate = getfiledate(filename)
             if filedate is None:
                 continue
