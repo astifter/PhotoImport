@@ -29,6 +29,14 @@ try:
 except:
     hasPyExif2=False
 
+if not hasPyExif2:
+    try:
+        import EXIF
+        hasEXIF=True
+    except:
+        hasEXIF=False
+
+
 import sys
 import stat
 import subprocess
@@ -64,6 +72,14 @@ def getfiledate(filename):
             filedate = exif['Exif.Photo.DateTimeOriginal'].value
         except:
             filedate = exif['Exif.Photo.DateTime'].value
+    elif hasEXIF:
+        f = open(filename,'rb')
+        exif = EXIF.process_file(f, details=False)
+        try:
+            filedatestr = exif['EXIF DateTimeOriginal']
+        except:
+            filedatestr = exif['EXIF DateTimeDigitized']
+        filedate = datetime.datetime.strptime(str(filedatestr),"%Y:%m:%d %H:%M:%S")
     elif hasExifTool:
         filedatestr = subprocess.Popen([exiftool_path,"-b","-DateTimeOriginal",filename],stdout=subprocess.PIPE).communicate()[0]
         filedate = datetime.datetime.strptime(filedatestr,"%Y:%m:%d %H:%M:%S")
@@ -99,6 +115,15 @@ def getthumbnail(imagename):
                 logging.error("Can not read EXIF preview from file %s, no preview." % imagename)
                 return
             imagetype = 'image/jpeg'
+    elif hasEXIF:
+        try:
+            f = open(imagename,'rb')
+            exif = EXIF.process_file(f, details=False)
+            data = exif['JPEGThumbnail']
+            imagetype = 'image/jpeg'
+        except:
+            logging.error("Can not read file %s, no preview." % imagename)
+            return
     elif hasExifTool:
         try:
             data = subprocess.Popen([exiftool_path,"-b","-ThumbnailImage",imagename],stdout=subprocess.PIPE).communicate()[0]
