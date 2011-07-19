@@ -31,6 +31,11 @@ coverage-report:
 	-mkdir $@
 	-python-coverage html -d $@
 
+test:
+	find Dest -type f -delete
+	find Test -name PhotoImport.db -delete
+	python PhotoImport.py
+
 clean:
 	@echo "Warning!"
 	@echo "The following files and folders will be deleted:"
