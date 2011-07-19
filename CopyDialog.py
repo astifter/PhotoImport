@@ -53,6 +53,7 @@ class CopyDialog(wx.Dialog):
         self.cancelbtn = wx.Button(self, wx.ID_CANCEL, "")
         self.neverbtn = wx.Button(self, -1, "&Never")
         self.okbtn = wx.Button(self, wx.ID_OK, "")
+        self.gauge = wx.Gauge(self, -1, 100, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
 
         self.__set_properties()
         self.__do_layout()
@@ -82,11 +83,13 @@ class CopyDialog(wx.Dialog):
         self.cancelbtn.SetMinSize((70, 29))
         self.neverbtn.SetMinSize((85, 29))
         self.okbtn.SetMinSize((100, 29))
+        self.gauge.SetMinSize((781, 20))
         # end wxGlade
 
     def __do_layout(self):
         # begin wxGlade: CopyDialog.__do_layout
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
+        sizer_7 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_9 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_8 = wx.BoxSizer(wx.HORIZONTAL)
@@ -106,6 +109,8 @@ class CopyDialog(wx.Dialog):
         sizer_3.Add(self.neverbtn, 0, wx.ALL, 4)
         sizer_3.Add(self.okbtn, 0, wx.ALL, 4)
         sizer_1.Add(sizer_3, 0, wx.EXPAND, 0)
+        sizer_7.Add(self.gauge, 1, wx.EXPAND, 0)
+        sizer_1.Add(sizer_7, 0, wx.EXPAND, 0)
         self.SetSizer(sizer_1)
         self.Layout()
         # end wxGlade
@@ -128,6 +133,14 @@ class CopyDialog(wx.Dialog):
         self.filelst.SetColumnWidth(0, width=wx.LIST_AUTOSIZE)
 
         self.handler = handler
+
+    def setprogress(self, value):
+        self.gauge.SetValue(value*self.gauge.GetRange())
+        wx.Yield()
+
+    def showprogess(self, show=True):
+        self.gauge.Show(show)
+        wx.Yield()
 
     def evt_splitter_resize(self, event): # wxGlade: CopyDialog.<event_handler>
         """ Resizes the preview pane. """

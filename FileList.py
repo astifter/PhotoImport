@@ -133,9 +133,9 @@ class FileList:
         for date in sorted(self.files.keys()):
             try:
                 import CopyDialog
-                copydialog = CopyDialog.CopyDialog(self.parent, -1, "")
-                copydialog.setconfig(self.config, date, self.files[date], self.copy)
-                copydialog.ShowModal()
+                self.copydialog = CopyDialog.CopyDialog(self.parent, -1, "")
+                self.copydialog.setconfig(self.config, date, self.files[date], self.copy)
+                self.copydialog.ShowModal()
             except:
                 logging.error("Error during CopyDialog.")
 
@@ -156,6 +156,11 @@ class FileList:
             except:
                 logging.error("Can not create folder %s, skipping." % dest)
                 return
+
+        self.copydialog.showprogess(True)
+
+        filecount = len(self.files[date].items())
+        donecount = 0.0
 
         for (filename, filedate) in self.files[date].items():
             if self.statusdb.getstatus(filename) is not None:
@@ -187,3 +192,8 @@ class FileList:
                 self.statusdb.setstatus(filename, "copied to %s" % path)
             except:
                 logging.error("Can not copy file %s to %s, skipping." % (filename, path))
+
+            donecount += 1.0
+            self.copydialog.setprogress(donecount/filecount)
+
+        self.copydialog.showprogess(False)
