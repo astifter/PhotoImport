@@ -34,7 +34,9 @@ coverage-report:
 test:
 	find Dest -type f -delete
 	find Test -name PhotoImport.db -delete
+	rm PhotoImport.log
 	python PhotoImport.py
+	cat PhotoImport.log
 
 clean:
 	@echo "Warning!"
