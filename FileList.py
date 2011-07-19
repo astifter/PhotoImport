@@ -130,11 +130,15 @@ class FileList:
         if not self.finished:
             logging.error("Can not show copy dialog, was not read.")
 
+        foldercount = len(self.files.keys())
+        donecount = 0
+
         for date in sorted(self.files.keys()):
             try:
+                donecount += 1
                 import CopyDialog
                 self.copydialog = CopyDialog.CopyDialog(self.parent, -1, "")
-                self.copydialog.setconfig(self.config, date, self.files[date], self.copy)
+                self.copydialog.setconfig(self.config, date, self.files[date], self.copy, donecount, foldercount)
                 self.copydialog.ShowModal()
             except:
                 logging.error("Error during CopyDialog.")

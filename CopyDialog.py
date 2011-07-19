@@ -115,12 +115,12 @@ class CopyDialog(wx.Dialog):
         self.Layout()
         # end wxGlade
 
-    def setconfig(self, config, date, files, handler):
+    def setconfig(self, config, date, files, handler, done, total):
         """ This gets all the configuration values and configures the UI. """
         self.date = date
 
         text = self.headerlbl.GetValue()
-        text = text.replace("<date>", date)
+        text = text.replace("<date>", "%s (%d of %d)" % (date, done, total))
         self.headerlbl.SetValue(text)
 
         self.destvalue.SetValue(config.destvalue)
