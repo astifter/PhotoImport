@@ -13,10 +13,15 @@ import wx
 
 class NoImageCopied(wx.Dialog):
     def __init__(self, *args, **kwds):
+        if "message" in kwds.keys():
+            self.messagetext = kwds.pop("message")
+        else:
+            self.messagetext = "No images were copied."
+
         # begin wxGlade: NoImageCopied.__init__
         kwds["style"] = wx.DEFAULT_DIALOG_STYLE
         wx.Dialog.__init__(self, *args, **kwds)
-        self.message = wx.StaticText(self, -1, "No images were copied.")
+        self.message = wx.StaticText(self, -1, self.messagetext)
         self.spacepanel1_copy = wx.Panel(self, -1)
         self.okbtn_copy = wx.Button(self, wx.ID_OK, "")
 

@@ -145,7 +145,11 @@ class FileList:
 
         if len(self.files.keys()) == 0:
             import NoImageCopied
-            self.nocopieddialog = NoImageCopied.NoImageCopied(self.parent, -1, "")
+            if not os.path.isdir(self.config.srcvalue):
+                message = "WARNING: Source folder does not exit, no images copied."
+            else:
+                message = "No new images were copied."
+            self.nocopieddialog = NoImageCopied.NoImageCopied(self.parent, -1, message=message)
             self.nocopieddialog.ShowModal()
 
     def copy(self, date, folder, do_copy=True):
