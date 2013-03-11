@@ -39,11 +39,11 @@ class CopyDialog(wx.Dialog):
 
     def __init__(self, *args, **kwds):
         # begin wxGlade: CopyDialog.__init__
-        kwds["style"] = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX|wx.THICK_FRAME
+        kwds["style"] = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX | wx.THICK_FRAME
         wx.Dialog.__init__(self, *args, **kwds)
-        self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D|wx.SP_BORDER)
         self.headerlbl = wx.TextCtrl(self, -1, "These files will be copied for date <date>:", style=wx.NO_BORDER)
-        self.filelst = wx.ListCtrl(self.splitter, -1, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
+        self.splitter = wx.SplitterWindow(self, -1, style=wx.SP_3D | wx.SP_BORDER)
+        self.filelst = wx.ListCtrl(self.splitter, -1, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.previewpane = ImagePanel(self.splitter, -1)
         self.destlbl = wx.StaticText(self, -1, "Dest. Folder")
         self.destvalue = wx.TextCtrl(self, -1, "")
@@ -53,7 +53,7 @@ class CopyDialog(wx.Dialog):
         self.cancelbtn = wx.Button(self, wx.ID_CANCEL, "")
         self.neverbtn = wx.Button(self, -1, "&Never")
         self.okbtn = wx.Button(self, wx.ID_OK, "")
-        self.gauge = wx.Gauge(self, -1, 100, style=wx.GA_HORIZONTAL|wx.GA_SMOOTH)
+        self.gauge = wx.Gauge(self, -1, 100, style=wx.GA_HORIZONTAL | wx.GA_SMOOTH)
 
         self.__set_properties()
         self.__do_layout()
@@ -98,10 +98,10 @@ class CopyDialog(wx.Dialog):
         sizer_1.Add(sizer_2, 0, wx.EXPAND, 0)
         self.splitter.SplitVertically(self.filelst, self.previewpane)
         sizer_1.Add(self.splitter, 1, wx.EXPAND, 0)
-        sizer_3.Add(self.destlbl, 0, wx.ALL|wx.ALIGN_RIGHT, 8)
+        sizer_3.Add(self.destlbl, 0, wx.ALL | wx.ALIGN_RIGHT, 8)
         sizer_3.Add(self.destvalue, 1, wx.ALL, 4)
         sizer_1.Add(sizer_3, 0, wx.EXPAND, 0)
-        sizer_4.Add(self.namelbl, 0, wx.ALL|wx.ALIGN_RIGHT, 8)
+        sizer_4.Add(self.namelbl, 0, wx.ALL | wx.ALIGN_RIGHT, 8)
         sizer_4.Add(self.namevalue, 1, wx.ALL, 4)
         sizer_1.Add(sizer_4, 0, wx.EXPAND, 0)
         sizer_5.Add(self.spacepanel1, 1, wx.EXPAND, 0)
