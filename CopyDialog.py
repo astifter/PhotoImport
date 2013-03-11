@@ -48,7 +48,7 @@ class CopyDialog(wx.Dialog):
         self.destlbl = wx.StaticText(self, -1, "Dest. Folder")
         self.destvalue = wx.TextCtrl(self, -1, "")
         self.namelbl = wx.StaticText(self, -1, "Name Pattern")
-        self.namevalue = wx.TextCtrl(self, -1, "")
+        self.namevalue = wx.TextCtrl(self, -1, "", style=wx.TE_PROCESS_ENTER)
         self.spacepanel1 = wx.Panel(self, -1)
         self.cancelbtn = wx.Button(self, wx.ID_CANCEL, "")
         self.neverbtn = wx.Button(self, -1, "&Never")
@@ -60,6 +60,7 @@ class CopyDialog(wx.Dialog):
 
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.evt_filelst_select, self.filelst)
         self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.evt_splitter_resize, self.splitter)
+        self.Bind(wx.EVT_TEXT_ENTER, self.evt_nameenter, self.namevalue)
         self.Bind(wx.EVT_BUTTON, self.evt_cancelbtn, self.cancelbtn)
         self.Bind(wx.EVT_BUTTON, self.evt_neverbtn, self.neverbtn)
         self.Bind(wx.EVT_BUTTON, self.evt_okbtn, self.okbtn)
@@ -168,6 +169,10 @@ class CopyDialog(wx.Dialog):
     def evt_neverbtn(self, event): # wxGlade: CopyDialog.<event_handler>
         """ Calls back the handler to mark the file as never. """
         self.handler(self.date, self.namevalue.GetValue(), False)
+        self.Destroy()
+
+    def evt_nameenter(self, event):  # wxGlade: CopyDialog.<event_handler>
+        self.handler(self.date, self.namevalue.GetValue(), True)
         self.Destroy()
 
 # end of class CopyDialog
