@@ -143,6 +143,11 @@ class FileList:
             except:
                 logging.error("Error during CopyDialog.")
 
+        if len(self.files.keys()) == 0:
+            import NoImageCopied
+            self.nocopieddialog = NoImageCopied.NoImageCopied(self.parent, -1, "")
+            self.nocopieddialog.ShowModal()
+
     def copy(self, date, folder, do_copy=True):
         """
         This actually copies the files, they are optionally renamed. 
