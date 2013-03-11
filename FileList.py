@@ -83,7 +83,7 @@ class FileList:
                 return
 
         for filename in filelist:
-            if filename.endswith("PhotoImport.db"):
+            if filename.endswith("PhotoImport.db") or filename.endswith(".CTG"):
                 continue
 
             filedate = getfiledate(filename)
