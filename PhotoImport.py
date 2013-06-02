@@ -26,6 +26,7 @@ The main class for the PhotoImport project.
 import wx
 from ConfigFrame import ConfigFrame
 import logging
+import LoggingHandler
 
 class PhotoImport(wx.App):
     """
@@ -38,19 +39,32 @@ class PhotoImport(wx.App):
         also fires up the startup frame.
         """
         wx.InitAllImageHandlers()
-        cfgfrm = ConfigFrame(None, -1, "")
-        self.SetTopWindow(cfgfrm)
-        cfgfrm.Show()
+        self.cfgfrm = ConfigFrame(None, -1, "")
+        self.SetTopWindow(self.cfgfrm)
+        self.cfgfrm.Show()
         return 1
+
+    def SetLogHandler(self, loghandler):
+        self.cfgfrm.loghandler = loghandler
 
 # end of class PhotoImport
 
 if __name__ == "__main__":
     logfilename = 'PhotoImport.log'
-    logging.basicConfig(filename=logfilename, level=logging.DEBUG)
+    logformat = '%(asctime)s:%(levelname)s:%(module)s:%(lineno)d:%(message)s'
+    logdatefmt = '%Y%m%d %H:%M:%S'
+    logging.basicConfig(filename=logfilename, level=logging.DEBUG, format=logformat, datefmt=logdatefmt)
+
+    loghandler = LoggingHandler.LoggingStream()
+    logStream = logging.StreamHandler(loghandler)
+    logStream.setLevel(logging.ERROR)
+    logStream.setFormatter(logging.Formatter(fmt='%(levelname)s: %(message)s' , datefmt=logdatefmt))
+    logging.getLogger().addHandler(logStream)
+
     logging.debug("------------------ Starting log. ------------------")
     try:
         photoimport = PhotoImport()
+        photoimport.SetLogHandler(loghandler)
         photoimport.MainLoop()
     except:
         import sys

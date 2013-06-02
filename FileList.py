@@ -59,8 +59,9 @@ class FileList:
     them.
     """
 
-    def __init__ (self, config, parent):
+    def __init__ (self, config, parent, loghandler):
 
+        self.loghandler = loghandler
         self.parent = parent
         self.config = config
         self.files = {}
@@ -144,12 +145,16 @@ class FileList:
                 logging.error("Error during CopyDialog.")
 
         if len(self.files.keys()) == 0:
-            import NoImageCopied
             if not os.path.isdir(self.config.srcvalue):
-                message = "WARNING: Source folder does not exit, no images copied."
+                message = "Source folder does not exist, no images copied."
+                logging.error(message)
             else:
                 message = "No new images were copied."
-            self.nocopieddialog = NoImageCopied.NoImageCopied(self.parent, -1, message=message)
+                logging.info(message)
+
+        if self.loghandler.hasMessages():
+            import NoImageCopied
+            self.nocopieddialog = NoImageCopied.NoImageCopied(self.parent, -1, message=self.loghandler.getMessages())
             self.nocopieddialog.ShowModal()
 
     def copy(self, date, folder, do_copy=True):

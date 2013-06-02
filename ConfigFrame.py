@@ -169,7 +169,7 @@ class ConfigFrame(wx.Frame):
         """ Creates the FileList and hands control to it. """
         import FileList
         self.__set_config()
-        self.filelist = FileList.FileList(self.config, self)
+        self.filelist = FileList.FileList(self.config, self, wx.GetTopLevelParent(self).loghandler)
         self.filelist.filter()
         self.filelist.showdialog()
         self.Close()
