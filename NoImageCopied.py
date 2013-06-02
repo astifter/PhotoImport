@@ -51,7 +51,6 @@ class NoImageCopied(wx.Dialog):
         # end wxGlade
 
     def evt_okbtn(self, event):  # wxGlade: NoImageCopied.<event_handler>
-        print "Event handler `evt_okbtn' not implemented!"
         event.Skip()
 
 # end of class NoImageCopied
